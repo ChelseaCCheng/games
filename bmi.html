@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI檢測器</title>
+    <link rel="stylesheet" href="CSS.css">
+    <style>
+        #bmi{
+            margin-top: 40px;
+        }
+        .box{
+            width: 300px;
+            padding: 1em;
+            margin: auto;
+            text-align: center;
+            line-height: 2.5em;
+            background-color: #e4f2ff;
+        }
+        #bmi button{
+            font-size: 14px;
+            padding: 0.2em 0.5em;
+            margin: 0.2em 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="flex">
+        <li><a href="boom.html">終極密碼</a></li>
+        <li><a href="bulls.html">猜數字</a></li>
+        <li><a href="PSS.html">剪刀石頭布</a></li>
+        <li><a href="todo.html">Todo List</a></li>
+        <li><a href="money.html">匯率換算</a></li>
+        <li><a href="bmi.html">BMI檢測</a></li>
+    </header> 
+    <div id="bmi" class="box">
+        <h2>BMI檢測器</h2>
+        <input class="input" type="text" id="height" placeholder="請輸入身高(cm)" maxlength="3"><br>
+        <input class="input" type="text" id="weight" placeholder="請輸入體重(kg)"><br>
+        <button type="button" id="btn">計算</button>
+        <h3 id="push"></h3>
+    </div>
+</body>
+</html>
+<script>
+    let h = document.getElementById("height");
+    let w = document.getElementById("weight");
+    let btn = document.getElementById("btn");
+    let push = document.getElementById("push");
+    btn.addEventListener("click",function(){
+        bmiPush();
+    })
+    w.addEventListener("keyup",function(e){
+        if(e.keyCode == 13){
+            bmiPush();
+        }
+    })
+    function bmiPush(){
+        let bmi = Math.floor(w.value / Math.pow(h.value/100,2) *100)/100;
+        if(isNaN(bmi)){
+            alert("輸入錯誤！")
+            push.textContent = "輸入錯誤！";
+        }else if(bmi == 0 || bmi == Infinity){
+            alert("數值不可為0")
+            push.textContent = "數值不可為0";
+        }else if(bmi < 18){
+            alert("BMI:" + bmi + "，過輕")
+            push.textContent = "BMI:" + bmi + "，過輕";
+        }else if(bmi < 24){
+            alert("BMI:" + bmi + "，標準")
+            push.textContent = "BMI:" + bmi + "，標準";
+        }else if(bmi < 28){
+            alert("BMI:" + bmi + "，過重")
+            push.textContent = "BMI:" + bmi + "，過重";
+        }else if(bmi < 30){
+            alert("BMI:" + bmi + "，輕度肥胖")
+            push.textContent = "BMI:" + bmi + "，輕度肥胖";
+        }else if(bmi < 34){
+            alert("BMI:" + bmi + "，中度肥胖")
+            push.textContent = "BMI:" + bmi + "，中度肥胖";
+        }else if(bmi >= 34){
+            alert("BMI:" + bmi + "，重度肥胖")
+            push.textContent = "BMI:" + bmi + "，重度肥胖";
+        }
+        h.value = "";
+        w.value = "";
+    }
+</script>

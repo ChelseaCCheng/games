@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Island+Moments&family=Noto+Serif+TC&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS.css">    
+    <style>
+        .box{
+            width: 300px;
+            font-size: 0;
+            text-align: center;
+            background-color: #e4f2ff;
+            margin: 40px auto;
+            padding: 16px;
+        }
+        .box h1{
+            font-size: 32px;
+            line-height: 1.5em;
+        }
+        .box h4{
+            font-size: 24px;
+            line-height: 1.5em;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .box input{
+            width: 100%;
+            font-size: 20px;
+            text-align: center;
+            padding: 0.25em 0;
+            margin: 0.3em 0;
+        }
+        .box button{
+            width: 50%;
+            font-size: 20px;
+            padding: 0.2em 1em;
+            margin: 0.3em 0;
+        }
+        .box ul{
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="rule" class="bc">
+        <div class="bc_content">
+            <h2>遊戲規則</h2>
+            <p>這是一款猜數字遊戲，遊戲規則如下：</p>
+            <p>電腦會隨機生成一個四位不重複的秘密數字，<br> 
+                會根據玩家的猜測給出 ?A?B 提示，<br>
+                A 表示有幾位數字正確且位置也正確。<br>
+                B 表示有幾位數字正確但位置不正確。<br>
+                玩家必須在5分鐘內，10次的猜測機會內猜中！</p>
+            <p>⚠️注意！關閉遊戲規則後即開始五分鐘倒數！</p>
+            <i id="x_rule" class="fa-solid fa-xmark fa-2x"></i>
+        </div>
+    </div>
+    <header class="flex">
+        <li><a href="boom.html">終極密碼</a></li>
+        <li><a href="bulls.html">猜數字</a></li>
+        <li><a href="PSS.html">剪刀石頭布</a></li>
+        <li><a href="todo.html">Todo List</a></li>
+        <li><a href="money.html">匯率換算</a></li>
+        <li><a href="bmi.html">BMI檢測</a></li>
+    </header> 
+    <div class="box">
+        <h1>猜數字遊戲</h1>
+        <h4 id="timer">05：00</h4>
+        <input autofocus type="text" id="user" maxlength="4" placeholder="請輸入四位數值">
+        <button type="button" id="reset" disabled onclick="window.location.reload()">再玩一次</button>
+        <button type="button" id="btn">送出</button>
+        <ul id="result"></ul>
+    </div>
+</body>
+</html>
+<script>
+    //倒數計時
+    let time = 300;
+    let timerStarted = false;
+    function start() {
+        intervalId = setInterval(() => {
+            time--;
+            let m = Math.floor(time / 60);
+            let s = time % 60;
+            if(s<10){
+            document.getElementById("timer").textContent = "0" + m + "：" + "0" + s;
+            }else{
+                document.getElementById("timer").textContent = "0" + m + "：" + s;
+            }
+            if(time<=0){
+                t = "時間到了！"
+                end(t);
+            }
+        },1000);
+    }
+
+    //關閉規則
+    let x_rule = document.getElementById("x_rule");
+    let rule = document.getElementById("rule"); 
+    x_rule.addEventListener("click",function(){
+        rule.style.display = "none";
+        if (!timerStarted) {
+            start();
+            timerStarted = true;
+        }
+    })
+
+    //CPU's Design
+    let cpu;
+    let t;
+    cpuRandom();
+    function cpuRandom(){
+        cpu = [Math.floor(Math.random()*10),Math.floor(Math.random()*10),Math.floor(Math.random()*10),Math.floor(Math.random()*10)];
+        if(cpu[0] == cpu[1] || cpu[0] == cpu[2] || cpu[0] == cpu[3] || cpu[1] == cpu[2] || cpu[1] == cpu[3] || cpu[2] == cpu[3]){
+            cpuRandom();
+        }
+    }
+    console.log(cpu);
+
+    //USER's Design
+    let user = document.getElementById("user");
+    let ul = document.getElementById("result");
+    let x = 0;
+    let btn =document.getElementById("btn");
+    btn.addEventListener("click",function(){
+        determination();
+    })
+    user.addEventListener("keyup",function(e){
+        if (e.keyCode==13){
+            determination();
+        }
+    })
+    
+    
+    function determination(){
+        let a = 0;
+        let b = 0;
+        x++;
+        //判定使用者輸入是否正確
+        if(isNaN(Number(user.value)) || user.value == ""){
+            t = x + ". 請輸入數值";
+            show(t);
+        }else if(user.value[0] == user.value[1] || user.value[0] == user.value[2] || user.value[0] == user.value[3] || user.value[1] == user.value[2] || user.value[1] == user.value[3] || user.value[2] == user.value[3]){
+            t = x + ". 輸入錯誤";
+            show(t);
+        }else{
+            judge();
+        }
+
+        if(x == 10  && a!=4){
+            t = "你輸了！"
+            end(t);
+        }
+
+        function judge(){
+            //A的判定
+            if(cpu[0] == Number(user.value[0])){
+                a++;
+            }
+            if(cpu[1] == Number(user.value[1])){
+                a++;
+            }
+            if(cpu[2] == Number(user.value[2])){
+                a++;
+            }
+            if(cpu[3] == Number(user.value[3])){
+                a++;
+            }
+            
+            //B的判定
+            if(cpu[0] == Number(user.value[1])){
+                b++;
+            }
+            if(cpu[0] == Number(user.value[2])){
+                b++;
+            }
+            if(cpu[0] == Number(user.value[3])){
+                b++;
+            }
+            if(cpu[1] == Number(user.value[0])){
+                b++;
+            }
+            if(cpu[1] == Number(user.value[2])){
+                b++;
+            }
+            if(cpu[1] == Number(user.value[3])){
+                b++;
+            }
+            if(cpu[2] == Number(user.value[0])){
+                b++;
+            }
+            if(cpu[2] == Number(user.value[1])){
+                b++;
+            }
+            if(cpu[2] == Number(user.value[3])){
+                b++;
+            }
+            if(cpu[3] == Number(user.value[0])){
+                b++;
+            }
+            if(cpu[3] == Number(user.value[1])){
+                b++;
+            }
+            if(cpu[3] == Number(user.value[2])){
+                b++;
+            }
+            if(a == 4){
+                t = x + ". " + user.value + " "+ "您猜中了！";
+                end(t);
+            }else{
+                t = x + ". " + user.value + " " + a + "A" + b + "B";
+                show(t);
+            }
+        }
+
+        function show(t){
+            let li = document.createElement("li");
+            let liTxt = document.createTextNode(t);
+            li.appendChild(liTxt);
+            ul.appendChild(li);
+        }
+        function end(t){
+            let li = document.createElement("li");
+            let liTxt = document.createTextNode(t);
+            li.appendChild(liTxt);
+            ul.appendChild(li);
+            document.getElementById("reset").disabled = false;
+            user.disabled = true;
+            btn.disabled = true;
+            clearInterval(intervalId);
+        }
+
+        user.value = "";
+    }
+</script>

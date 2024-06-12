@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS.css">
+    <title>終極密碼</title>
+    <style>
+        .game_1{
+            width: 350px;
+            background-color: #e4f2ff;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 40px auto;
+            padding: 0 1em;
+        }
+        .game_1 h1{
+            margin: 10px auto;
+            color: rgb(71, 71, 71);
+            text-align: left;
+        }
+        .game_1 input{
+            margin: 5px auto;
+            width: 100%;
+            font-size: 16px;
+            line-height: 1.6em;
+            text-align: center;
+            outline-color: #838383;
+        }
+        .game_1 button{
+            width: 50%;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .game_1 ul{
+            width: 100%;
+            list-style: inside;
+            text-align: center;
+            line-height: 2em;
+        }
+    </style>
+</head>
+<body>
+    <div id="rule" class="bc">
+        <div class="bc_content">
+            <h2>遊戲規則</h2>
+            <p>終極密碼是一款猜數字遊戲，遊戲規則如下：</p>
+            <p>電腦會在1~99隨機產生秘密數字，玩家需要猜測數字為多少。<br>
+                玩家根據提示逐步猜測數字，每次猜測後，電腦會提供數字範圍，<br>
+                玩家猜測的數字與秘密數字相等，則遊戲勝利，結束遊戲。<br>           
+            </p> 
+            <p>遊戲結束後，玩家可以選擇重新開始遊戲或退出遊戲。<br>
+                適合多人一起玩</p>
+            <i id="x_rule" class="fa-solid fa-xmark fa-2x"></i>
+        </div>
+    </div>
+    <header class="flex">
+        <li><a href="boom.html">終極密碼</a></li>
+        <li><a href="bulls.html">猜數字</a></li>
+        <li><a href="PSS.html">剪刀石頭布</a></li>
+        <li><a href="todo.html">Todo List</a></li>
+        <li><a href="money.html">匯率換算</a></li>
+        <li><a href="bmi.html">BMI檢測</a></li>
+    </header>    
+    <div class="game_1">
+        <h1>GAME_1 終極密碼</h1>
+        <input class="" type="text" id="user" placeholder="請輸入數值" autofocus maxlength="2" >
+        <button type="button" disabled id="reset">再玩一次</button>
+        <button type="button" id="send">送出</button>
+        <ul></ul>
+    </div>
+    <div id="boom" class="bc" style="display: none;">
+        <div class="bc_content">
+            <h2>BOOM!</h2>
+            <button id="again">再玩一次</button>
+            <i id="x_boom" class="x_btn fa-solid fa-xmark fa-2x"></i>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    let x_rule = document.getElementById("x_rule");
+    let x_boom = document.getElementById("x_boom");
+    let rule = document.getElementById("rule");
+    let boom_1 = document.getElementById("boom");
+    let again = document.getElementById("again");
+    
+    x_rule.addEventListener("click",function(){
+        rule.style.display = "none";
+    })
+    x_boom.addEventListener("click",function(){
+        boom_1.style.display = "none";
+    })
+
+    let user = document.getElementById("user");
+    let send = document.getElementById("send");
+    let reset = document.getElementById("reset");
+    let ul = document.getElementsByTagName("ul")[0];
+    let min = 0;
+    let max = 100;
+    let cpu;
+    let txt;
+    
+    //cpu
+    randomCpu();
+    function randomCpu(){
+        cpu = Math.ceil(Math.random() * 99);
+        if(cpu <= 0 || cpu > 100){
+            randomCpu();
+        }
+    }
+    console.log(cpu);
+
+    //user
+    send.addEventListener("click",function(){
+        boom();
+    })
+    user.addEventListener("keyup",function(e){
+        if(e.keyCode == 13){
+            boom();
+        }
+    })
+    
+    function boom(){
+        let n = Number(user.value);
+        if(isNaN(n)){
+            txt = "請出入數值"
+        }else if(n <= 0){
+            txt = "不可小於0"
+        }else if(n <= min){
+            txt = "不可小於最小值"
+        }else if(n >= max){
+            txt = "不可大於最大值"
+        }else if(n == cpu){
+            txt = "BOOM!"
+            boom_1.style.display = "block";
+            user.disabled = true;
+            reset.disabled = false;
+            send.disabled = true;
+            reset.addEventListener("click",function(){
+                play_again();
+            })
+            again.addEventListener("click",function(){
+                play_again();
+            })
+        }else if(n < max && n > cpu){
+            max = n;
+            txt = min + " ～ " + max;
+        }else if(n > min && n < cpu){
+            min = n;
+            txt = min + " ～ " + max;
+        }else{
+            txt = "其他錯誤！"
+        }
+        function play_again (){
+            window.location.reload();
+        }
+
+        let li = document.createElement("li");
+        li.textContent = txt;
+        ul.appendChild(li);
+        user.value= ""
+    }
+</script>

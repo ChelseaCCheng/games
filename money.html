@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>匯率換算</title>
+    <link rel="stylesheet" href="CSS.css">
+</head>
+<style>
+    #app{
+        margin-top: 40px;
+        text-align: center;
+    }
+    #app div{
+        padding-bottom: 2em;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    #app input{
+        text-align: center;
+    }
+    #app li{
+        list-style: none;
+        padding: 0.5em ;
+        color: slategray;
+        line-height: 25px;
+    }
+    #app img{
+        height: 25px;
+        vertical-align: bottom;
+        padding-right: 5px;
+    }
+</style>
+<body>
+    <header class="flex">
+        <li><a href="boom.html">終極密碼</a></li>
+        <li><a href="bulls.html">猜數字</a></li>
+        <li><a href="PSS.html">剪刀石頭布</a></li>
+        <li><a href="todo.html">Todo List</a></li>
+        <li><a href="money.html">匯率換算</a></li>
+        <li><a href="bmi.html">BMI檢測</a></li>
+    </header> 
+    <ul id="app">
+        <div>請輸入台幣金額：<br><input class="input" type="text" v-model="NT" @input="formatNT"></div>
+        <li><img src="pic.css/united-states.png" alt="us">美金(USD)：{{USD}}</li>
+        <li><img src="pic.css/united-kingdom.png" alt="uk">英鎊(GBP)：{{GBP}}</li>
+        <li><img src="pic.css/japan.png" alt="japan">日幣(JPY)：{{JPY}}</li>
+        <li><img src="pic.css/south-korea.png" alt="korea">韓元(KRW)：{{KRW}}</li>
+        <li><img src="pic.css/china.png" alt="china">人民幣(CNY)：{{CNY}}</li>
+    </ul>
+</body>
+</html>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+    Vue.createApp({
+    data() {
+        return {
+            NT: '',
+            rawNT: '',
+        }
+    },
+    computed: {
+        USD(){
+            return this.rawNT ? (this.rawNT * 0.031).toLocaleString('en-US') : ''
+        },
+        GBP() {
+            return this.rawNT ? (this.rawNT * 0.024).toLocaleString('en-US') : ''
+        },
+        JPY(){
+            return this.rawNT ? (this.rawNT * 4.85).toLocaleString('en-US') : ''
+        },
+        KRW() {
+            return this.rawNT ? (this.rawNT * 42.60).toLocaleString('en-US') : ''
+        },
+        CNY() {
+            return this.rawNT ? (this.rawNT * 0.22).toLocaleString('en-US') : ''
+        },
+        formattedNT() {
+            return this.rawNT ? Number(this.rawNT).toLocaleString('en-US') : ''
+        }
+    },
+    methods: {
+        formatNT(event) {
+            let input = event.target.value.replace(/[^0-9]/g, '');
+            this.rawNT = input;
+            this.NT = input ? Number(input).toLocaleString('en-US'):'';
+        }
+    }
+}).mount("#app")
+
+</script>

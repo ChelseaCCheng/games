@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>剪刀石頭布</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS.css">
+    <style>
+        .grid-1{
+            width: calc(100% / 12 * 1 );
+        }
+        .grid-2{
+            width: calc(100% / 12 * 2 );
+        }
+        .grid-3{
+            width: calc(100% / 12 * 3 );
+        }
+        .grid-4{
+            width: calc(100% / 12 * 4 );
+        }
+        .grid-5{
+            width: calc(100% / 12 * 5 );
+        }
+        .grid-6{
+            width: calc(100% / 12 * 6 );
+        }
+        .grid-7{
+            width: calc(100% / 12 * 7 );
+        }
+        .grid-8{
+            width: calc(100% / 12 * 8 );
+        }
+        .grid-9{
+            width: calc(100% / 12 * 9 );
+        }
+        .grid-10{
+            width: calc(100% / 12 * 10 );
+        }
+        .grid-11{
+            width: calc(100% / 12 * 11 );
+        }
+        .grid-12{
+            width: calc(100% / 12 * 12 );
+        }
+        #game{
+            padding-top: 50px;
+            text-align: center;
+        }
+        #game .grid-4 h2{
+            padding: 0.5em 0;
+            font-size: 30px;
+        }
+        #game .grid-2{
+            font-size: 50px;
+            font-family: sans-serif;
+            margin: auto;
+        }
+        #game .grid-2 h2{
+            font-size: 30px;
+            margin: 0.2em 0;
+        }
+        #score{
+            font-size: 23px;
+        }
+        #game .grid-2 .total{
+            font-size: 80px;
+            font-weight: 800;
+            margin-top: 50px;
+            color: red;
+        }
+        .box img{  
+            border:5px solid brown;
+            border-radius: 20px;
+        }
+        #small{
+            justify-content: center;
+        }
+        #small img{
+            width:30%;
+            margin:2px ;
+            cursor: pointer;
+
+        }
+        #small img:hover{
+            box-shadow: 1px 4px 5px #ababab;
+        }
+    </style>
+</head>
+<body>
+    <div class="bc" id="rule">
+        <div class="bc_content">
+            <h2>遊戲規則</h2>
+            <p>遊戲開始時，玩家和電腦各出一個手勢（剪刀、石頭或布）。</p>
+            <p>玩家和電腦的手勢進行比較，判斷勝負關係：<br>
+                同樣手勢為平局<br>
+                剪刀 vs. 石頭：石頭勝<br>
+                剪刀 vs. 布：剪刀勝<br>
+                石頭 vs. 布：布勝
+            </p> 
+            <p>根據比較結果，更新玩家的分數，並顯示結果<br>
+                遊戲繼續進行，直到玩家選擇退出遊戲。
+            </p>
+            <i id="x" class="fa-solid fa-xmark fa-2x"></i>
+        </div>
+    </div>
+    <header class="flex">
+        <li><a href="boom.html">終極密碼</a></li>
+        <li><a href="bulls.html">猜數字</a></li>
+        <li><a href="PSS.html">剪刀石頭布</a></li>
+        <li><a href="todo.html">Todo List</a></li>
+        <li><a href="money.html">匯率換算</a></li>
+        <li><a href="bmi.html">BMI檢測</a></li>
+    </header>
+    <div class="box grid-12 flex" id="game">    
+        <div class="grid-1"></div>
+        <div class="box grid-4">
+            <h2>電腦</h2>
+            <img src="pic.css/1.png" alt="" class="cpuimg">
+        </div>
+        <div class="box grid-2">
+            <div class="grid-12">VS</div>
+            <h2>玩家分數</h2>
+            <div class="grid-12" id="score">
+                <P>輸:0｜贏:0｜平手:0</P>
+            </div>
+            <div class="grid-12 total">--</div>
+        </div>
+        <div class="box grid-4">
+            <h2>玩家</h2>
+            <img src="pic.css/1.png" alt="" class="bigimg">
+            <div class="flex" id="small">
+                <img src="pic.css/1.png" alt="" class="smallimg">
+                <img src="pic.css/2.png" alt="" class="smallimg">
+                <img src="pic.css/3.png" alt="" class="smallimg">
+            </div>
+        </div>
+        <div class="grid-1"></div>
+    </div>
+</body>
+</html>
+<script>
+    let x = document.getElementById("x");
+    let rule = document.getElementById("rule");
+    x.addEventListener("click",function(){
+        rule.style.display = "none";
+    })
+
+    let cpuArray = ["pic.css/1.png","pic.css/2.png","pic.css/3.png"];
+    let cpu = document.getElementsByClassName("cpuimg")[0];
+    let bigimg = document.getElementsByClassName("bigimg")[0];
+    let smallimg = document.getElementsByClassName("smallimg");
+    let score = document.getElementById("score");
+    let win = 0
+    let lose = 0 
+    let tie = 0
+    let total = document.getElementsByClassName("total")[0];
+
+    for (const btn of smallimg) {
+        btn.addEventListener("click",function(){
+            let x = Math.round(Math.random()*2)
+            cpu.setAttribute("src",cpuArray[x]);
+            bigimg.setAttribute("src",this.getAttribute("src"));
+                if(cpuArray[x] == this.getAttribute("src")){
+                    tie++;
+                    total.textContent = "平"
+                }
+                if(cpuArray[x] == cpuArray[0] && this.getAttribute("src") == cpuArray[2]){
+                    lose++;
+                    total.textContent = "輸";
+                }
+                if(cpuArray[x] == cpuArray[1] && this.getAttribute("src") == cpuArray[0]){
+                    lose++;
+                    total.textContent = "輸";
+                }
+                if(cpuArray[x] == cpuArray[2] && this.getAttribute("src") == cpuArray[1]){
+                    lose++;
+                    total.textContent = "輸";
+                }
+                if(cpuArray[x] == cpuArray[0] && this.getAttribute("src") == cpuArray[1]){
+                    win++;
+                    total.textContent = "贏";
+                }
+                if(cpuArray[x] == cpuArray[1] && this.getAttribute("src") == cpuArray[2]){
+                    win++;
+                    total.textContent = "贏";
+                    
+                }
+                if(cpuArray[x] == cpuArray[2] && this.getAttribute("src") == cpuArray[0]){
+                    win++;
+                    total.textContent = "贏";
+                }
+                score.textContent = "輸:" + lose + "｜贏:" + win + "｜平手:" + tie;
+        })  
+    }
+    console.log()
+</script>
